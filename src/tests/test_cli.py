@@ -72,9 +72,9 @@ class TestCLI:
         ],
     )
     @throttle_test(duration=MINUTE)
-    def test_commands_apt(self, *, cmd: str, args: list[str]) -> None:
+    def test_commands_apt(self, *, commands: list[str], args: list[str]) -> None:
         runner = CliRunner()
-        result = runner.invoke(cli, [cmd, *args])
+        result = runner.invoke(cli, [*commands, *args])
         assert result.exit_code == 0, result.stderr
 
     @mark.parametrize(
