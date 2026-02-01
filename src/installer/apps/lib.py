@@ -786,7 +786,7 @@ def set_up_just(
 ##
 
 
-def set_up_nvim(
+def set_up_neovim(
     *,
     token: SecretLike | None = GITHUB_TOKEN,
     path_binaries: PathLike = PATH_BINARIES,
@@ -815,7 +815,7 @@ def set_up_nvim(
             symlink(dest_dir / "bin/nvim", dest_bin, sudo=sudo)
 
     set_up_local_or_ssh_installer_cli(
-        "nvim",
+        ("nvim", "neovim"),
         set_up_local,
         ssh=ssh,
         force=force,
@@ -1415,7 +1415,7 @@ __all__ = [
     "set_up_git",
     "set_up_jq",
     "set_up_just",
-    "set_up_nvim",
+    "set_up_neovim",
     "set_up_pve_fake_subscription",
     "set_up_restic",
     "set_up_rsync",

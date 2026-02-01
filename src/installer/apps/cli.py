@@ -33,7 +33,7 @@ from installer.apps.lib import (
     set_up_git,
     set_up_jq,
     set_up_just,
-    set_up_nvim,
+    set_up_neovim,
     set_up_pve_fake_subscription,
     set_up_restic,
     set_up_rsync,
@@ -596,7 +596,7 @@ def just_sub_cmd(
 @ssh_option
 @force_option
 @retry_option
-def nvim_sub_cmd(
+def neovim_sub_cmd(
     *,
     token: SecretLike | None,
     path_binaries: PathLike,
@@ -611,7 +611,7 @@ def nvim_sub_cmd(
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_nvim(
+    set_up_neovim(
         token=token,
         path_binaries=path_binaries,
         sudo=sudo,
@@ -1148,7 +1148,7 @@ __all__ = [
     "git_sub_cmd",
     "jq_sub_cmd",
     "just_sub_cmd",
-    "nvim_sub_cmd",
+    "neovim_sub_cmd",
     "pve_fake_subscription_sub_cmd",
     "restic_sub_cmd",
     "ripgrep_sub_cmd",

@@ -19,7 +19,7 @@ from installer.apps.lib import (
     set_up_fzf,
     set_up_jq,
     set_up_just,
-    set_up_nvim,
+    set_up_neovim,
     set_up_restic,
     set_up_sops,
     set_up_starship,
@@ -207,7 +207,7 @@ class TestSetUpNvim:
     @run_test_frac(frac=RUN_TEST_FRAC)
     @throttle_test(duration=THROTTLE_DURATION)
     def test_main(self, *, tmp_path: Path) -> None:
-        set_up_nvim(path_binaries=tmp_path, force=True)
+        set_up_neovim(path_binaries=tmp_path, force=True)
         result = run(str(tmp_path / "nvim"), "--help", return_=True)
         pattern = normalize_multi_line_str("""
             Usage:
