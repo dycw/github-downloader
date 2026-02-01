@@ -17,6 +17,7 @@ from installer.apps.lib import (
     set_up_eza,
     set_up_fd,
     set_up_fzf,
+    set_up_jq,
     set_up_just,
     set_up_nvim,
     set_up_restic,
@@ -25,7 +26,6 @@ from installer.apps.lib import (
     set_up_uv,
     set_up_uv_cmd,
     set_up_zoxide,
-    setup_jq,
     setup_ripgrep,
     setup_ruff,
     setup_sd,
@@ -181,7 +181,7 @@ class TestSetUpJq:
     @run_test_frac(frac=RUN_TEST_FRAC)
     @throttle_test(duration=THROTTLE_DURATION)
     def test_main(self, *, tmp_path: Path) -> None:
-        setup_jq(path_binaries=tmp_path, force=True)
+        set_up_jq(path_binaries=tmp_path, force=True)
         result = run(str(tmp_path / "jq"), "--help", return_=True)
         pattern = normalize_multi_line_str("""
             Usage:\tjq [options] <jq filter> [file...]

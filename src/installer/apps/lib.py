@@ -97,7 +97,7 @@ def set_up_apt_package(
 ##
 
 
-def setup_asset(
+def set_up_asset(
     asset_owner: str,
     asset_repo: str,
     path: PathLike,
@@ -349,7 +349,7 @@ def set_up_direnv(
 
     def set_up_local() -> None:
         dest = Path(path_binaries, "direnv")
-        setup_asset(
+        set_up_asset(
             "direnv",
             "direnv",
             dest,
@@ -698,21 +698,23 @@ def set_up_git(
 ##
 
 
-def setup_jq(
+def set_up_jq(
     *,
-    force: bool = False,
-    path_binaries: PathLike = PATH_BINARIES,
     token: SecretLike | None = GITHUB_TOKEN,
+    path_binaries: PathLike = PATH_BINARIES,
     sudo: bool = False,
     perms: PermissionsLike = PERMISSIONS_BINARY,
     owner: str | int | None = None,
     group: str | int | None = None,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'jq'."""
-    if (shutil.which("jq") is None) or force:
-        _LOGGER.info("Setting up 'jq'...")
+
+    def set_up_local() -> None:
         dest = Path(path_binaries, "jq")
-        setup_asset(
+        set_up_asset(
             "jqlang",
             "jq",
             dest,
@@ -725,8 +727,20 @@ def setup_jq(
             owner=owner,
             group=group,
         )
-    else:
-        _LOGGER.info("'jq' is already set up")
+
+    set_up_local_or_ssh_installer_cli(
+        "jq",
+        set_up_local,
+        ssh=ssh,
+        force=force,
+        token=token,
+        path_binaries=path_binaries,
+        sudo=sudo,
+        perms=perms,
+        owner=owner,
+        group=group,
+        retry=retry,
+    )
 
 
 ##
@@ -1023,7 +1037,7 @@ def setup_shfmt(
     """Set up 'shfmt'."""
     _LOGGER.info("Setting up 'shfmt'...")
     dest = Path(path_binaries, "shfmt")
-    setup_asset(
+    set_up_asset(
         "mvdan",
         "sh",
         dest,
@@ -1056,7 +1070,7 @@ def set_up_sops(
 
     def set_up_local() -> None:
         dest = Path(path_binaries, "sops")
-        setup_asset(
+        set_up_asset(
             "getsops",
             "sops",
             dest,
@@ -1307,7 +1321,7 @@ def setup_yq(
     """Set up 'yq'."""
     _LOGGER.info("Setting up 'yq'...")
     dest = Path(path_binaries, "yq")
-    setup_asset(
+    set_up_asset(
         "mikefarah",
         "yq",
         dest,
@@ -1387,6 +1401,7 @@ def set_up_zoxide(
 __all__ = [
     "set_up_age",
     "set_up_apt_package",
+    "set_up_asset",
     "set_up_bat",
     "set_up_btm",
     "set_up_curl",
@@ -1398,6 +1413,7 @@ __all__ = [
     "set_up_fd",
     "set_up_fzf",
     "set_up_git",
+    "set_up_jq",
     "set_up_just",
     "set_up_nvim",
     "set_up_pve_fake_subscription",
@@ -1408,8 +1424,6 @@ __all__ = [
     "set_up_uv",
     "set_up_uv_cmd",
     "set_up_zoxide",
-    "setup_asset",
-    "setup_jq",
     "setup_ripgrep",
     "setup_ruff",
     "setup_sd",

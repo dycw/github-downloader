@@ -31,6 +31,7 @@ from installer.apps.lib import (
     set_up_fd,
     set_up_fzf,
     set_up_git,
+    set_up_jq,
     set_up_just,
     set_up_nvim,
     set_up_pve_fake_subscription,
@@ -40,7 +41,6 @@ from installer.apps.lib import (
     set_up_starship,
     set_up_uv,
     set_up_zoxide,
-    setup_jq,
     setup_ripgrep,
     setup_ruff,
     setup_sd,
@@ -507,34 +507,40 @@ def git_sub_cmd(*, ssh: str | None, sudo: bool, retry: Retry | None) -> None:
 ##
 
 
-@force_option
-@path_binaries_option
 @token_option
+@path_binaries_option
 @sudo_option
 @perms_option
 @owner_option
 @group_option
+@ssh_option
+@force_option
+@retry_option
 def jq_sub_cmd(
     *,
-    force: bool,
-    path_binaries: PathLike,
     token: SecretLike | None,
+    path_binaries: PathLike,
     sudo: bool,
     perms: PermissionsLike,
     owner: str | int | None,
     group: str | int | None,
+    ssh: str | None,
+    force: bool,
+    retry: Retry | None,
 ) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    setup_jq(
-        force=force,
-        path_binaries=path_binaries,
+    set_up_jq(
         token=token,
+        path_binaries=path_binaries,
         sudo=sudo,
         perms=perms,
         owner=owner,
         group=group,
+        ssh=ssh,
+        force=force,
+        retry=retry,
     )
 
 
