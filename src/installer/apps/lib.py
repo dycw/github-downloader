@@ -227,7 +227,7 @@ def set_up_bat(
 ##
 
 
-def set_up_btm(
+def set_up_bottom(
     *,
     token: SecretLike | None = GITHUB_TOKEN,
     path_binaries: PathLike = PATH_BINARIES,
@@ -256,7 +256,7 @@ def set_up_btm(
             cp(src, dest, sudo=sudo, perms=perms, owner=owner, group=group)
 
     set_up_local_or_ssh_installer_cli(
-        "btm",
+        ("btm", "bottom"),
         set_up_local,
         ssh=ssh,
         force=force,
@@ -1403,7 +1403,7 @@ __all__ = [
     "set_up_apt_package",
     "set_up_asset",
     "set_up_bat",
-    "set_up_btm",
+    "set_up_bottom",
     "set_up_curl",
     "set_up_delta",
     "set_up_direnv",

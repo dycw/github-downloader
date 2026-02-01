@@ -21,7 +21,7 @@ from installer.apps.lib import (
     set_up_age,
     set_up_apt_package,
     set_up_bat,
-    set_up_btm,
+    set_up_bottom,
     set_up_curl,
     set_up_delta,
     set_up_direnv,
@@ -163,7 +163,7 @@ def bat_sub_cmd(
 @ssh_option
 @force_option
 @retry_option
-def btm_sub_cmd(
+def bottom_sub_cmd(
     *,
     token: SecretLike | None,
     path_binaries: PathLike,
@@ -178,7 +178,7 @@ def btm_sub_cmd(
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_btm(
+    set_up_bottom(
         token=token,
         path_binaries=path_binaries,
         sudo=sudo,
@@ -1137,7 +1137,7 @@ __all__ = [
     "age_sub_cmd",
     "apt_package_sub_cmd",
     "bat_sub_cmd",
-    "btm_sub_cmd",
+    "bottom_sub_cmd",
     "curl_sub_cmd",
     "delta_sub_cmd",
     "direnv_sub_cmd",

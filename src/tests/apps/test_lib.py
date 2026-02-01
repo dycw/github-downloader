@@ -10,7 +10,7 @@ from utilities.subprocess import run
 from installer.apps.lib import (
     set_up_age,
     set_up_bat,
-    set_up_btm,
+    set_up_bottom,
     set_up_delta,
     set_up_direnv,
     set_up_dust,
@@ -96,7 +96,7 @@ class TestSetUpBtm:
     @run_test_frac(frac=RUN_TEST_FRAC)
     @throttle_test(duration=THROTTLE_DURATION)
     def test_main(self, *, tmp_path: Path) -> None:
-        set_up_btm(path_binaries=tmp_path, force=True)
+        set_up_bottom(path_binaries=tmp_path, force=True)
         result = run(str(tmp_path / "btm"), "--help", return_=True)
         pattern = normalize_multi_line_str("""
             Usage: btm [OPTIONS]
