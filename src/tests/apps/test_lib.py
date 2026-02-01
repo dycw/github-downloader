@@ -92,7 +92,7 @@ class TestSetUpBat:
         assert search(escape(pattern), result) is not None, result
 
 
-class TestSetUpBtm:
+class TestSetUpBottom:
     @run_test_frac(frac=RUN_TEST_FRAC)
     @throttle_test(duration=THROTTLE_DURATION)
     def test_main(self, *, tmp_path: Path) -> None:
@@ -203,7 +203,7 @@ class TestSetUpJust:
         assert search(escape(pattern), result) is not None, result
 
 
-class TestSetUpNvim:
+class TestSetUpNeovim:
     @run_test_frac(frac=RUN_TEST_FRAC)
     @throttle_test(duration=THROTTLE_DURATION)
     def test_main(self, *, tmp_path: Path) -> None:
