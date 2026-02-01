@@ -36,12 +36,12 @@ from installer.apps.lib import (
     set_up_neovim,
     set_up_pve_fake_subscription,
     set_up_restic,
+    set_up_ripgrep,
     set_up_rsync,
     set_up_sops,
     set_up_starship,
     set_up_uv,
     set_up_zoxide,
-    setup_ripgrep,
     setup_ruff,
     setup_sd,
     setup_shellcheck,
@@ -689,6 +689,9 @@ def restic_sub_cmd(
 @perms_option
 @owner_option
 @group_option
+@ssh_option
+@force_option
+@retry_option
 def ripgrep_sub_cmd(
     *,
     token: SecretLike | None,
@@ -697,17 +700,23 @@ def ripgrep_sub_cmd(
     perms: PermissionsLike,
     owner: str | int | None,
     group: str | int | None,
+    ssh: str | None,
+    force: bool,
+    retry: Retry | None,
 ) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    setup_ripgrep(
+    set_up_ripgrep(
         token=token,
         path_binaries=path_binaries,
         sudo=sudo,
         perms=perms,
         owner=owner,
         group=group,
+        ssh=ssh,
+        force=force,
+        retry=retry,
     )
 
 

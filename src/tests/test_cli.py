@@ -31,7 +31,6 @@ class TestCLI:
             param(["git", "--ssh", "user@hostname"]),
             param(["git", "--sudo"]),
             param(["git", "--retry", "1", "1"]),
-            param(["ripgrep"], id="ripgrep"),
             param(["rsync"], id="rsync"),
             param(["rsync", "--ssh", "user@hostname"]),
             param(["rsync", "--sudo"]),
@@ -100,6 +99,7 @@ class TestCLI:
             param("just"),
             param("neovim"),
             param("restic"),
+            param("ripgrep"),
             param("sops"),
         ],
     )

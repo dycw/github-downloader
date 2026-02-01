@@ -906,7 +906,7 @@ def set_up_restic(
 ##
 
 
-def setup_ripgrep(
+def set_up_ripgrep(
     *,
     token: SecretLike | None = GITHUB_TOKEN,
     path_binaries: PathLike = PATH_BINARIES,
@@ -914,20 +914,38 @@ def setup_ripgrep(
     perms: PermissionsLike = PERMISSIONS_BINARY,
     owner: str | int | None = None,
     group: str | int | None = None,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'ripgrep'."""
-    _LOGGER.info("Setting up 'ripgrep'...")
-    with yield_gzip_asset(
-        "burntsushi",
-        "ripgrep",
+
+    def set_up_local() -> None:
+        with yield_gzip_asset(
+            "burntsushi",
+            "ripgrep",
+            token=token,
+            match_system=True,
+            match_machine=True,
+            not_endswith=["sha256"],
+        ) as temp:
+            src = temp / "rg"
+            dest = Path(path_binaries, src.name)
+            cp(src, dest, sudo=sudo, perms=perms, owner=owner, group=group)
+
+    set_up_local_or_ssh_installer_cli(
+        ("rg", "ripgrep"),
+        set_up_local,
+        ssh=ssh,
+        force=force,
         token=token,
-        match_system=True,
-        match_machine=True,
-        not_endswith=["sha256"],
-    ) as temp:
-        src = temp / "rg"
-        dest = Path(path_binaries, src.name)
-        cp(src, dest, sudo=sudo, perms=perms, owner=owner, group=group)
+        path_binaries=path_binaries,
+        sudo=sudo,
+        perms=perms,
+        owner=owner,
+        group=group,
+        retry=retry,
+    )
 
 
 ##
@@ -1418,13 +1436,13 @@ __all__ = [
     "set_up_neovim",
     "set_up_pve_fake_subscription",
     "set_up_restic",
+    "set_up_ripgrep",
     "set_up_rsync",
     "set_up_sops",
     "set_up_starship",
     "set_up_uv",
     "set_up_uv_cmd",
     "set_up_zoxide",
-    "setup_ripgrep",
     "setup_ruff",
     "setup_sd",
     "setup_shellcheck",

@@ -21,12 +21,12 @@ from installer.apps.lib import (
     set_up_just,
     set_up_neovim,
     set_up_restic,
+    set_up_ripgrep,
     set_up_sops,
     set_up_starship,
     set_up_uv,
     set_up_uv_cmd,
     set_up_zoxide,
-    setup_ripgrep,
     setup_ruff,
     setup_sd,
     setup_shellcheck,
@@ -233,7 +233,7 @@ class TestSetUpRipgrep:
     @run_test_frac(frac=RUN_TEST_FRAC)
     @throttle_test(duration=THROTTLE_DURATION)
     def test_main(self, *, tmp_path: Path) -> None:
-        setup_ripgrep(path_binaries=tmp_path)
+        set_up_ripgrep(path_binaries=tmp_path, force=True)
         result = run(str(tmp_path / "rg"), "--help", return_=True)
         pattern = normalize_multi_line_str("""
             USAGE:
