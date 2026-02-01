@@ -59,16 +59,17 @@ if TYPE_CHECKING:
 
 
 @argument("package", type=str)
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
 def apt_package_sub_cmd(
-    *, package: str, ssh: str | None, sudo: bool, retry: Retry | None
+    *, package: str, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
 ) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_apt_package(package, ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package(package, sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -194,14 +195,17 @@ def bottom_sub_cmd(
 ##
 
 
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
-def curl_sub_cmd(*, ssh: str | None, sudo: bool, retry: Retry | None) -> None:
+def curl_sub_cmd(
+    *, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
+) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_curl(ssh=ssh, sudo=sudo, retry=retry)
+    set_up_curl(sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -494,14 +498,17 @@ def fzf_sub_cmd(
 ##
 
 
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
-def git_sub_cmd(*, ssh: str | None, sudo: bool, retry: Retry | None) -> None:
+def git_sub_cmd(
+    *, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
+) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_git(ssh=ssh, sudo=sudo, retry=retry)
+    set_up_git(sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -723,14 +730,17 @@ def ripgrep_sub_cmd(
 ##
 
 
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
-def rsync_sub_cmd(*, ssh: str | None, sudo: bool, retry: Retry | None) -> None:
+def rsync_sub_cmd(
+    *, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
+) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_rsync(ssh=ssh, sudo=sudo, retry=retry)
+    set_up_rsync(sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##

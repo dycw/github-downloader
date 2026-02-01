@@ -19,22 +19,6 @@ class TestCLI:
         "commands",
         [
             ##
-            param(["apt-package", "git"], id="apt-package"),
-            param(["apt-package", "git", "--ssh", "user@hostname"]),
-            param(["apt-package", "git", "--sudo"]),
-            param(["apt-package", "git", "--retry", "1", "1"]),
-            param(["curl"], id="curl"),
-            param(["curl", "--ssh", "user@hostname"]),
-            param(["curl", "--sudo"]),
-            param(["curl", "--retry", "1", "1"]),
-            param(["git"], id="git"),
-            param(["git", "--ssh", "user@hostname"]),
-            param(["git", "--sudo"]),
-            param(["git", "--retry", "1", "1"]),
-            param(["rsync"], id="rsync"),
-            param(["rsync", "--ssh", "user@hostname"]),
-            param(["rsync", "--sudo"]),
-            param(["rsync", "--retry", "1", "1"]),
             param(["ruff"], id="ruff"),
             param(["sd"], id="sd"),
             param(["shellcheck"], id="shellcheck"),
@@ -66,6 +50,31 @@ class TestCLI:
     def test_commands(self, *, commands: list[str]) -> None:
         runner = CliRunner()
         result = runner.invoke(cli, commands)
+        assert result.exit_code == 0, result.stderr
+
+    @mark.parametrize(
+        "commands",
+        [
+            param(["apt-package", "git"]),
+            param(["curl"]),
+            param(["git"]),
+            param(["rsync"]),
+        ],
+    )
+    @mark.parametrize(
+        "args",
+        [
+            param([]),
+            param(["--sudo"]),
+            param(["--ssh", "user@hostname"]),
+            param(["--force"]),
+            param(["--retry", "1", "1"]),
+        ],
+    )
+    @throttle_test(duration=MINUTE)
+    def test_commands_apt(self, *, cmd: str, args: list[str]) -> None:
+        runner = CliRunner()
+        result = runner.invoke(cli, [cmd, *args])
         assert result.exit_code == 0, result.stderr
 
     @mark.parametrize(

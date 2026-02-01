@@ -274,10 +274,14 @@ def set_up_bottom(
 
 
 def set_up_curl(
-    *, ssh: str | None = None, sudo: bool = False, retry: Retry | None = None
+    *,
+    sudo: bool = False,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'curl'."""
-    set_up_apt_package("curl", ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package("curl", sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -689,10 +693,14 @@ def set_up_fzf(
 
 
 def set_up_git(
-    *, ssh: str | None = None, sudo: bool = False, retry: Retry | None = None
+    *,
+    sudo: bool = False,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'git'."""
-    set_up_apt_package("git", ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package("git", sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -952,10 +960,14 @@ def set_up_ripgrep(
 
 
 def set_up_rsync(
-    *, ssh: str | None = None, sudo: bool = False, retry: Retry | None = None
+    *,
+    sudo: bool = False,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'rsync'."""
-    set_up_apt_package("rsync", ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package("rsync", sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
