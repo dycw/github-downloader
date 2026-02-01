@@ -19,31 +19,6 @@ class TestCLI:
         "commands",
         [
             ##
-            param(["apt-package", "git"], id="apt-package"),
-            param(["apt-package", "git", "--ssh", "user@hostname"]),
-            param(["apt-package", "git", "--sudo"]),
-            param(["apt-package", "git", "--retry", "1", "1"]),
-            param(["curl"], id="curl"),
-            param(["curl", "--ssh", "user@hostname"]),
-            param(["curl", "--sudo"]),
-            param(["curl", "--retry", "1", "1"]),
-            param(["git"], id="git"),
-            param(["git", "--ssh", "user@hostname"]),
-            param(["git", "--sudo"]),
-            param(["git", "--retry", "1", "1"]),
-            param(["jq"], id="jq"),
-            param(["jq", "--force"]),
-            param(["jq", "--path-binaries", "path"]),
-            param(["jq", "--token", "token"]),
-            param(["jq", "--sudo"]),
-            param(["jq", "--perms", "perms"]),
-            param(["jq", "--owner", "owner"]),
-            param(["jq", "--group", "group"]),
-            param(["ripgrep"], id="ripgrep"),
-            param(["rsync"], id="rsync"),
-            param(["rsync", "--ssh", "user@hostname"]),
-            param(["rsync", "--sudo"]),
-            param(["rsync", "--retry", "1", "1"]),
             param(["ruff"], id="ruff"),
             param(["sd"], id="sd"),
             param(["shellcheck"], id="shellcheck"),
@@ -78,6 +53,31 @@ class TestCLI:
         assert result.exit_code == 0, result.stderr
 
     @mark.parametrize(
+        "commands",
+        [
+            param(["apt-package", "git"]),
+            param(["curl"]),
+            param(["git"]),
+            param(["rsync"]),
+        ],
+    )
+    @mark.parametrize(
+        "args",
+        [
+            param([]),
+            param(["--sudo"]),
+            param(["--ssh", "user@hostname"]),
+            param(["--force"]),
+            param(["--retry", "1", "1"]),
+        ],
+    )
+    @throttle_test(duration=MINUTE)
+    def test_commands_apt(self, *, commands: list[str], args: list[str]) -> None:
+        runner = CliRunner()
+        result = runner.invoke(cli, [*commands, *args])
+        assert result.exit_code == 0, result.stderr
+
+    @mark.parametrize(
         "args",
         [
             param([]),
@@ -99,14 +99,16 @@ class TestCLI:
         [
             param("age"),
             param("bat"),
-            param("btm"),
+            param("bottom"),
             param("delta"),
             param("dust"),
             param("eza"),
             param("fd"),
+            param("jq"),
             param("just"),
-            param("nvim"),
+            param("neovim"),
             param("restic"),
+            param("ripgrep"),
             param("sops"),
         ],
     )

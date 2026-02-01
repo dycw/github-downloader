@@ -97,7 +97,7 @@ def set_up_apt_package(
 ##
 
 
-def setup_asset(
+def set_up_asset(
     asset_owner: str,
     asset_repo: str,
     path: PathLike,
@@ -227,7 +227,7 @@ def set_up_bat(
 ##
 
 
-def set_up_btm(
+def set_up_bottom(
     *,
     token: SecretLike | None = GITHUB_TOKEN,
     path_binaries: PathLike = PATH_BINARIES,
@@ -256,7 +256,7 @@ def set_up_btm(
             cp(src, dest, sudo=sudo, perms=perms, owner=owner, group=group)
 
     set_up_local_or_ssh_installer_cli(
-        "btm",
+        ("btm", "bottom"),
         set_up_local,
         ssh=ssh,
         force=force,
@@ -274,10 +274,14 @@ def set_up_btm(
 
 
 def set_up_curl(
-    *, ssh: str | None = None, sudo: bool = False, retry: Retry | None = None
+    *,
+    sudo: bool = False,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'curl'."""
-    set_up_apt_package("curl", ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package("curl", sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -349,7 +353,7 @@ def set_up_direnv(
 
     def set_up_local() -> None:
         dest = Path(path_binaries, "direnv")
-        setup_asset(
+        set_up_asset(
             "direnv",
             "direnv",
             dest,
@@ -689,30 +693,36 @@ def set_up_fzf(
 
 
 def set_up_git(
-    *, ssh: str | None = None, sudo: bool = False, retry: Retry | None = None
+    *,
+    sudo: bool = False,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'git'."""
-    set_up_apt_package("git", ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package("git", sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
 
 
-def setup_jq(
+def set_up_jq(
     *,
-    force: bool = False,
-    path_binaries: PathLike = PATH_BINARIES,
     token: SecretLike | None = GITHUB_TOKEN,
+    path_binaries: PathLike = PATH_BINARIES,
     sudo: bool = False,
     perms: PermissionsLike = PERMISSIONS_BINARY,
     owner: str | int | None = None,
     group: str | int | None = None,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'jq'."""
-    if (shutil.which("jq") is None) or force:
-        _LOGGER.info("Setting up 'jq'...")
+
+    def set_up_local() -> None:
         dest = Path(path_binaries, "jq")
-        setup_asset(
+        set_up_asset(
             "jqlang",
             "jq",
             dest,
@@ -725,8 +735,20 @@ def setup_jq(
             owner=owner,
             group=group,
         )
-    else:
-        _LOGGER.info("'jq' is already set up")
+
+    set_up_local_or_ssh_installer_cli(
+        "jq",
+        set_up_local,
+        ssh=ssh,
+        force=force,
+        token=token,
+        path_binaries=path_binaries,
+        sudo=sudo,
+        perms=perms,
+        owner=owner,
+        group=group,
+        retry=retry,
+    )
 
 
 ##
@@ -772,7 +794,7 @@ def set_up_just(
 ##
 
 
-def set_up_nvim(
+def set_up_neovim(
     *,
     token: SecretLike | None = GITHUB_TOKEN,
     path_binaries: PathLike = PATH_BINARIES,
@@ -801,7 +823,7 @@ def set_up_nvim(
             symlink(dest_dir / "bin/nvim", dest_bin, sudo=sudo)
 
     set_up_local_or_ssh_installer_cli(
-        "nvim",
+        ("nvim", "neovim"),
         set_up_local,
         ssh=ssh,
         force=force,
@@ -892,7 +914,7 @@ def set_up_restic(
 ##
 
 
-def setup_ripgrep(
+def set_up_ripgrep(
     *,
     token: SecretLike | None = GITHUB_TOKEN,
     path_binaries: PathLike = PATH_BINARIES,
@@ -900,30 +922,52 @@ def setup_ripgrep(
     perms: PermissionsLike = PERMISSIONS_BINARY,
     owner: str | int | None = None,
     group: str | int | None = None,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'ripgrep'."""
-    _LOGGER.info("Setting up 'ripgrep'...")
-    with yield_gzip_asset(
-        "burntsushi",
-        "ripgrep",
+
+    def set_up_local() -> None:
+        with yield_gzip_asset(
+            "burntsushi",
+            "ripgrep",
+            token=token,
+            match_system=True,
+            match_machine=True,
+            not_endswith=["sha256"],
+        ) as temp:
+            src = temp / "rg"
+            dest = Path(path_binaries, src.name)
+            cp(src, dest, sudo=sudo, perms=perms, owner=owner, group=group)
+
+    set_up_local_or_ssh_installer_cli(
+        ("rg", "ripgrep"),
+        set_up_local,
+        ssh=ssh,
+        force=force,
         token=token,
-        match_system=True,
-        match_machine=True,
-        not_endswith=["sha256"],
-    ) as temp:
-        src = temp / "rg"
-        dest = Path(path_binaries, src.name)
-        cp(src, dest, sudo=sudo, perms=perms, owner=owner, group=group)
+        path_binaries=path_binaries,
+        sudo=sudo,
+        perms=perms,
+        owner=owner,
+        group=group,
+        retry=retry,
+    )
 
 
 ##
 
 
 def set_up_rsync(
-    *, ssh: str | None = None, sudo: bool = False, retry: Retry | None = None
+    *,
+    sudo: bool = False,
+    ssh: str | None = None,
+    force: bool = False,
+    retry: Retry | None = None,
 ) -> None:
     """Set up 'rsync'."""
-    set_up_apt_package("rsync", ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package("rsync", sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -1023,7 +1067,7 @@ def setup_shfmt(
     """Set up 'shfmt'."""
     _LOGGER.info("Setting up 'shfmt'...")
     dest = Path(path_binaries, "shfmt")
-    setup_asset(
+    set_up_asset(
         "mvdan",
         "sh",
         dest,
@@ -1056,7 +1100,7 @@ def set_up_sops(
 
     def set_up_local() -> None:
         dest = Path(path_binaries, "sops")
-        setup_asset(
+        set_up_asset(
             "getsops",
             "sops",
             dest,
@@ -1307,7 +1351,7 @@ def setup_yq(
     """Set up 'yq'."""
     _LOGGER.info("Setting up 'yq'...")
     dest = Path(path_binaries, "yq")
-    setup_asset(
+    set_up_asset(
         "mikefarah",
         "yq",
         dest,
@@ -1387,8 +1431,9 @@ def set_up_zoxide(
 __all__ = [
     "set_up_age",
     "set_up_apt_package",
+    "set_up_asset",
     "set_up_bat",
-    "set_up_btm",
+    "set_up_bottom",
     "set_up_curl",
     "set_up_delta",
     "set_up_direnv",
@@ -1398,19 +1443,18 @@ __all__ = [
     "set_up_fd",
     "set_up_fzf",
     "set_up_git",
+    "set_up_jq",
     "set_up_just",
-    "set_up_nvim",
+    "set_up_neovim",
     "set_up_pve_fake_subscription",
     "set_up_restic",
+    "set_up_ripgrep",
     "set_up_rsync",
     "set_up_sops",
     "set_up_starship",
     "set_up_uv",
     "set_up_uv_cmd",
     "set_up_zoxide",
-    "setup_asset",
-    "setup_jq",
-    "setup_ripgrep",
     "setup_ruff",
     "setup_sd",
     "setup_shellcheck",

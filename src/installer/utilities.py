@@ -97,7 +97,7 @@ def set_up_local_or_ssh(
 
 
 def set_up_local_or_ssh_installer_cli(
-    cmd: str,
+    app_and_cmd: str | tuple[str, str],
     set_up_local: Callable[[], None],
     /,
     *,
@@ -119,16 +119,23 @@ def set_up_local_or_ssh_installer_cli(
     user: str | None = None,
     retry: Retry | None = None,
 ) -> None:
+    match app_and_cmd:
+        case str():
+            app = cmd = app_and_cmd
+        case str() as app, str() as cmd:
+            ...
+        case never:
+            assert_never(never)
     match ssh:
         case None:
-            if (shutil.which(cmd) is None) or force:
-                _LOGGER.info("Setting up %r...", cmd)
+            if (shutil.which(app) is None) or force:
+                _LOGGER.info("Setting up %r...", app)
                 set_up_local()
             else:
-                _LOGGER.info("%r is already set up", cmd)
+                _LOGGER.info("%r is already set up", app)
         case str():
             ssh_user, ssh_hostname = split_ssh(ssh)
-            _LOGGER.info("Setting up %r on %r...", cmd, ssh_hostname)
+            _LOGGER.info("Setting up %r on %r...", app, ssh_hostname)
             args: list[str] = []
             if etc:
                 args.append("--etc")

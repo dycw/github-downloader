@@ -8,7 +8,7 @@ from installer.apps.cli import (
     age_sub_cmd,
     apt_package_sub_cmd,
     bat_sub_cmd,
-    btm_sub_cmd,
+    bottom_sub_cmd,
     curl_sub_cmd,
     delta_sub_cmd,
     direnv_sub_cmd,
@@ -20,7 +20,7 @@ from installer.apps.cli import (
     git_sub_cmd,
     jq_sub_cmd,
     just_sub_cmd,
-    nvim_sub_cmd,
+    neovim_sub_cmd,
     pve_fake_subscription_sub_cmd,
     restic_sub_cmd,
     ripgrep_sub_cmd,
@@ -55,7 +55,9 @@ _ = cli.command(name="apt-package", help="Set up an 'apt' package", **CONTEXT_SE
 )
 _ = cli.command(name="age", help="Set up 'age'", **CONTEXT_SETTINGS)(age_sub_cmd)
 _ = cli.command(name="bat", help="Set up 'bat'", **CONTEXT_SETTINGS)(bat_sub_cmd)
-_ = cli.command(name="btm", help="Set up 'btm'", **CONTEXT_SETTINGS)(btm_sub_cmd)
+_ = cli.command(name="bottom", help="Set up 'bottom'", **CONTEXT_SETTINGS)(
+    bottom_sub_cmd
+)
 _ = cli.command(name="curl", help="Set up 'curl'", **CONTEXT_SETTINGS)(curl_sub_cmd)
 _ = cli.command(name="delta", help="Set up 'delta'", **CONTEXT_SETTINGS)(delta_sub_cmd)
 _ = cli.command(name="direnv", help="Set up 'direnv'", **CONTEXT_SETTINGS)(
@@ -71,7 +73,9 @@ _ = cli.command(name="fzf", help="Set up 'fzf'", **CONTEXT_SETTINGS)(fzf_sub_cmd
 _ = cli.command(name="jq", help="Set up 'jq'", **CONTEXT_SETTINGS)(jq_sub_cmd)
 _ = cli.command(name="git", help="Set up 'git'", **CONTEXT_SETTINGS)(git_sub_cmd)
 _ = cli.command(name="just", help="Set up 'just'", **CONTEXT_SETTINGS)(just_sub_cmd)
-_ = cli.command(name="nvim", help="Set up 'nvim'", **CONTEXT_SETTINGS)(nvim_sub_cmd)
+_ = cli.command(name="neovim", help="Set up 'neovim'", **CONTEXT_SETTINGS)(
+    neovim_sub_cmd
+)
 _ = cli.command(
     name="pve-fake-subscription",
     help="Set up 'pve-fake-subscription'",

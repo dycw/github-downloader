@@ -21,7 +21,7 @@ from installer.apps.lib import (
     set_up_age,
     set_up_apt_package,
     set_up_bat,
-    set_up_btm,
+    set_up_bottom,
     set_up_curl,
     set_up_delta,
     set_up_direnv,
@@ -31,17 +31,17 @@ from installer.apps.lib import (
     set_up_fd,
     set_up_fzf,
     set_up_git,
+    set_up_jq,
     set_up_just,
-    set_up_nvim,
+    set_up_neovim,
     set_up_pve_fake_subscription,
     set_up_restic,
+    set_up_ripgrep,
     set_up_rsync,
     set_up_sops,
     set_up_starship,
     set_up_uv,
     set_up_zoxide,
-    setup_jq,
-    setup_ripgrep,
     setup_ruff,
     setup_sd,
     setup_shellcheck,
@@ -59,16 +59,17 @@ if TYPE_CHECKING:
 
 
 @argument("package", type=str)
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
 def apt_package_sub_cmd(
-    *, package: str, ssh: str | None, sudo: bool, retry: Retry | None
+    *, package: str, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
 ) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_apt_package(package, ssh=ssh, sudo=sudo, retry=retry)
+    set_up_apt_package(package, sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -163,7 +164,7 @@ def bat_sub_cmd(
 @ssh_option
 @force_option
 @retry_option
-def btm_sub_cmd(
+def bottom_sub_cmd(
     *,
     token: SecretLike | None,
     path_binaries: PathLike,
@@ -178,7 +179,7 @@ def btm_sub_cmd(
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_btm(
+    set_up_bottom(
         token=token,
         path_binaries=path_binaries,
         sudo=sudo,
@@ -194,14 +195,17 @@ def btm_sub_cmd(
 ##
 
 
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
-def curl_sub_cmd(*, ssh: str | None, sudo: bool, retry: Retry | None) -> None:
+def curl_sub_cmd(
+    *, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
+) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_curl(ssh=ssh, sudo=sudo, retry=retry)
+    set_up_curl(sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -494,47 +498,56 @@ def fzf_sub_cmd(
 ##
 
 
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
-def git_sub_cmd(*, ssh: str | None, sudo: bool, retry: Retry | None) -> None:
+def git_sub_cmd(
+    *, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
+) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_git(ssh=ssh, sudo=sudo, retry=retry)
+    set_up_git(sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
 
 
-@force_option
-@path_binaries_option
 @token_option
+@path_binaries_option
 @sudo_option
 @perms_option
 @owner_option
 @group_option
+@ssh_option
+@force_option
+@retry_option
 def jq_sub_cmd(
     *,
-    force: bool,
-    path_binaries: PathLike,
     token: SecretLike | None,
+    path_binaries: PathLike,
     sudo: bool,
     perms: PermissionsLike,
     owner: str | int | None,
     group: str | int | None,
+    ssh: str | None,
+    force: bool,
+    retry: Retry | None,
 ) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    setup_jq(
-        force=force,
-        path_binaries=path_binaries,
+    set_up_jq(
         token=token,
+        path_binaries=path_binaries,
         sudo=sudo,
         perms=perms,
         owner=owner,
         group=group,
+        ssh=ssh,
+        force=force,
+        retry=retry,
     )
 
 
@@ -590,7 +603,7 @@ def just_sub_cmd(
 @ssh_option
 @force_option
 @retry_option
-def nvim_sub_cmd(
+def neovim_sub_cmd(
     *,
     token: SecretLike | None,
     path_binaries: PathLike,
@@ -605,7 +618,7 @@ def nvim_sub_cmd(
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_nvim(
+    set_up_neovim(
         token=token,
         path_binaries=path_binaries,
         sudo=sudo,
@@ -683,6 +696,9 @@ def restic_sub_cmd(
 @perms_option
 @owner_option
 @group_option
+@ssh_option
+@force_option
+@retry_option
 def ripgrep_sub_cmd(
     *,
     token: SecretLike | None,
@@ -691,31 +707,40 @@ def ripgrep_sub_cmd(
     perms: PermissionsLike,
     owner: str | int | None,
     group: str | int | None,
+    ssh: str | None,
+    force: bool,
+    retry: Retry | None,
 ) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    setup_ripgrep(
+    set_up_ripgrep(
         token=token,
         path_binaries=path_binaries,
         sudo=sudo,
         perms=perms,
         owner=owner,
         group=group,
+        ssh=ssh,
+        force=force,
+        retry=retry,
     )
 
 
 ##
 
 
-@ssh_option
 @sudo_option
+@ssh_option
+@force_option
 @retry_option
-def rsync_sub_cmd(*, ssh: str | None, sudo: bool, retry: Retry | None) -> None:
+def rsync_sub_cmd(
+    *, sudo: bool, ssh: str | None, force: bool, retry: Retry | None
+) -> None:
     if is_pytest():
         return
     set_up_logging(__name__, root=True)
-    set_up_rsync(ssh=ssh, sudo=sudo, retry=retry)
+    set_up_rsync(sudo=sudo, ssh=ssh, force=force, retry=retry)
 
 
 ##
@@ -1131,7 +1156,7 @@ __all__ = [
     "age_sub_cmd",
     "apt_package_sub_cmd",
     "bat_sub_cmd",
-    "btm_sub_cmd",
+    "bottom_sub_cmd",
     "curl_sub_cmd",
     "delta_sub_cmd",
     "direnv_sub_cmd",
@@ -1142,7 +1167,7 @@ __all__ = [
     "git_sub_cmd",
     "jq_sub_cmd",
     "just_sub_cmd",
-    "nvim_sub_cmd",
+    "neovim_sub_cmd",
     "pve_fake_subscription_sub_cmd",
     "restic_sub_cmd",
     "ripgrep_sub_cmd",
